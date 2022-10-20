@@ -1,2 +1,2 @@
-# event_manager
+# event-manager
 The Odin Project
