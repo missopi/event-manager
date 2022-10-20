@@ -8,7 +8,7 @@ contents = CSV.open(
 )
 
 contents.each do |row|
-  name = row[2]
+  name = row[:first_name]
   puts name
 end
 
