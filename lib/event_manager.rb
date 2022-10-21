@@ -8,7 +8,7 @@ end
 def legislators_by_zipcode(zip)
   civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
   civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
-  
+
   begin
     legislators = civic_info.representative_info_by_address(
       address: zip,
@@ -17,7 +17,7 @@ def legislators_by_zipcode(zip)
     )
     legislators = legislators.officials
     legislator_names = legislators.map(&:name)
-    legislator_names.join(", ")
+    legislator_names.join(', ')
   rescue
     'You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials'
   end
@@ -26,7 +26,7 @@ end
 puts 'Event Manager Initialized!'
 
 contents = CSV.open(
-  'event_attendees.csv', 
+  'event_attendees.csv',
   headers: true,
   header_converters: :symbol
 )
@@ -38,6 +38,4 @@ contents.each do |row|
   puts "#{name} #{zipcode} #{legislators}"
 end
 
-
-
-
+template_letter = File.read('form_letter.html')
