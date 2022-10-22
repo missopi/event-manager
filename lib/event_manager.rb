@@ -61,6 +61,7 @@ contents.each do |row|
   reg_date = row[:regdate]
 
   reg_day = Time.strptime(reg_date, '%M/%d/%y %k:%M').strftime('%A')
+  reg_hour = Time.strptime(reg_date, '%M/%d/%y %k:%M').hour
 
   phone = clean_homephone(row[:homephone])
   zipcode = clean_zipcode(row[:zipcode])
@@ -68,7 +69,7 @@ contents.each do |row|
 
   form_letter = erb_template.result(binding)
 
-  puts reg_day.to_s
+  puts reg_hour.to_s
 
   #save_thank_you_letter(id, form_letter)
 end
