@@ -65,14 +65,15 @@ contents = CSV.open(
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
-  reg_day = target_day(row[:regdate])
-  reg_hour = target_time(row[:regdate])
+  day = target_day(row[:regdate])
+  hour = target_time(row[:regdate])
   phone = clean_homephone(row[:homephone])
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
   form_letter = erb_template.result(binding)
 
-  puts phone.to_s
-
-  #save_thank_you_letter(id, form_letter)
+  # puts "Most common registration day is #{day}"
+  # puts "Most common registration day is #{hour}"
+  # puts "#{name} #{phone}"
+  # save_thank_you_letter(id, form_letter)
 end
