@@ -32,17 +32,13 @@ def save_thank_you_letter(id, form_letter)
 end
 
 def clean_homephone(homephone)
-  homephone.gsub!(/[^\w]/, '')
+  homephone.gsub!(/[^\w]/, '').to_s
 
-  if homephone.length < 10 || homephone.length > 11
+  if homephone.length == 11 && homephone.start_with?('1')
+    homephone.slice!(0)
+    homephone
+  elsif homephone.length < 10 || homephone.length >= 11
     'Please provide a valid phone number to receive mobile alerts.'
-  elsif homephone.length == 11
-    if homephone.start_with?('1')
-      homephone.slice!(0)
-      homephone
-    else
-      'Please provide a valid phone number to receive mobile alerts.'
-    end
   else
     homephone
   end
