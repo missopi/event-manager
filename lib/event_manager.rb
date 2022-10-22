@@ -58,7 +58,9 @@ contents = CSV.open(
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
-  regdate = row[:regdate]
+  reg_date = row[:regdate]
+
+  reg_day = Time.strptime(reg_date, '%M/%d/%y %k:%M').strftime('%A')
 
   phone = clean_homephone(row[:homephone])
   zipcode = clean_zipcode(row[:zipcode])
@@ -66,7 +68,7 @@ contents.each do |row|
 
   form_letter = erb_template.result(binding)
 
-  puts "#{name} #{regdate}"
+  puts reg_day.to_s
 
   #save_thank_you_letter(id, form_letter)
 end
