@@ -31,6 +31,23 @@ def save_thank_you_letter(id, form_letter)
   end
 end
 
+def clean_homephone(homephone)
+  homephone.gsub!(/[^\w]/, '')
+
+  if homephone.length < 10 || homephone.length > 11
+    'Please provide a valid phone number to receive mobile alerts.'
+  elsif homephone.length == 11
+    if homephone.start_with?('1')
+      homephone.slice!(0)
+      homephone
+    else
+      'Please provide a valid phone number to receive mobile alerts.'
+    end
+  else
+    homephone
+  end
+end
+
 puts 'Event Manager Initialized!'
 
 template_letter = File.read('form_letter.erb')
@@ -45,14 +62,14 @@ contents = CSV.open(
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
-  phone_number = row[:homephone]
+  phone = clean_homephone(row[:homephone])
 
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
 
-  puts "#{name} #{phone_number}"
+  puts "#{name} #{phone}"
 
   #save_thank_you_letter(id, form_letter)
 end
