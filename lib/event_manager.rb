@@ -44,6 +44,14 @@ def clean_homephone(homephone)
   end
 end
 
+def target_time(reg_date)
+  Time.strptime(reg_date, '%M/%d/%y %k:%M').hour
+end
+
+def target_day(reg_date)
+  Time.strptime(reg_date, '%M/%d/%y %k:%M').strftime('%A')
+end
+
 puts 'Event Manager Initialized!'
 
 template_letter = File.read('form_letter.erb')
@@ -58,18 +66,15 @@ contents = CSV.open(
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
-  reg_date = row[:regdate]
-
-  reg_day = Time.strptime(reg_date, '%M/%d/%y %k:%M').strftime('%A')
-  reg_hour = Time.strptime(reg_date, '%M/%d/%y %k:%M').hour
-
+  reg_hour = target_time(row[:regdate])
+  reg_day = target_day(row[:regdate])
   phone = clean_homephone(row[:homephone])
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
 
-  puts reg_hour.to_s
+  puts reg_day.to_s
 
   #save_thank_you_letter(id, form_letter)
 end
