@@ -35,8 +35,7 @@ def clean_homephone(homephone)
   homephone.gsub!(/[^\w]/, '').to_s
 
   if homephone.length == 11 && homephone.start_with?('1')
-    homephone.slice!(0)
-    homephone
+    homephone[1..10]
   elsif homephone.length != 10
     'Please provide a valid phone number to receive mobile alerts.'
   else
@@ -66,15 +65,14 @@ contents = CSV.open(
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
-  reg_hour = target_time(row[:regdate])
   reg_day = target_day(row[:regdate])
+  reg_hour = target_time(row[:regdate])
   phone = clean_homephone(row[:homephone])
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
-
   form_letter = erb_template.result(binding)
 
-  puts reg_day.to_s
+  puts phone.to_s
 
   #save_thank_you_letter(id, form_letter)
 end
