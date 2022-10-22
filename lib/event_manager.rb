@@ -37,7 +37,7 @@ def clean_homephone(homephone)
   if homephone.length == 11 && homephone.start_with?('1')
     homephone.slice!(0)
     homephone
-  elsif homephone.length < 10 || homephone.length >= 11
+  elsif homephone.length != 10
     'Please provide a valid phone number to receive mobile alerts.'
   else
     homephone
