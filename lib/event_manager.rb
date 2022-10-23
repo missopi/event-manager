@@ -70,8 +70,10 @@ contents.each do |row|
 
   # puts "Day = #{reg_date_to_print.strftime('%A')}"
   # puts "Time = #{reg_date.strftime('%H:%M')}"
-  # puts "#{name} #{phone}"
-  # save_thank_you_letter(id, form_letter)
+
+  puts "#{name} #{phone}"
+
+  save_thank_you_letter(id, form_letter)
 end
 
 puts "\nThe most common registration day is #{registration_count(day)}"
