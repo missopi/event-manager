@@ -1,6 +1,7 @@
 require 'csv'
 require 'google/apis/civicinfo_v2'
 require 'erb'
+require 'date'
 
 def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5, '0')[0..4]
@@ -41,37 +42,37 @@ def clean_homephone(homephone)
   end
 end
 
-def target_time(reg_date)
-  Time.strptime(reg_date, '%M/%d/%y %k:%M').hour
+def registration_count(array)
+  array.max_by { |a| array.count(a) }
 end
 
-def target_day(reg_date)
-  Time.strptime(reg_date, '%M/%d/%y %k:%M').strftime('%A')
-end
-
-puts 'Event Manager Initialized!'
+puts "\nEvent Manager Initialized!"
 
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
-contents = CSV.open(
-  'event_attendees.csv',
-  headers: true,
-  header_converters: :symbol
-)
+contents = CSV.open('event_attendees.csv', headers: true, header_converters: :symbol)
+hour = []
+day = []
+count = 0
 
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
-  day = target_day(row[:regdate])
-  hour = target_time(row[:regdate])
   phone = clean_homephone(row[:homephone])
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
   form_letter = erb_template.result(binding)
+  reg_date = DateTime.strptime(row[:regdate], '%m/%d/%y %H:%M')
+  hour[count] = reg_date.hour
+  day[count] = reg_date.strftime('%A')
+  count += 1
 
-  # puts "Most common registration day is #{day}"
-  # puts "Most common registration day is #{hour}"
+  # puts "Day = #{reg_date_to_print.strftime('%A')}"
+  # puts "Time = #{reg_date.strftime('%H:%M')}"
   # puts "#{name} #{phone}"
   # save_thank_you_letter(id, form_letter)
 end
+
+puts "\nThe most common registration day is #{registration_count(day)}"
+puts "The most common registration hour is #{registration_count(hour)}:00\n\n"
